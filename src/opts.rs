@@ -29,7 +29,10 @@ pub struct Opts{
 pub enum SubCommand{
     #[command(name = "csv",  about = "Show CSV , or Convert CSV to other formats")]
     Csv(CsvOpts),
+    #[command(name = "genpass",  about = "generate a password")]
+    GenPass(GenPassOpts),
 }
+
 #[derive(Debug, Parser)]
 pub struct CsvOpts{
     #[arg(short,long, value_parser = verify_input_file)]
@@ -48,6 +51,21 @@ pub struct CsvOpts{
      #[arg(long, default_value_t = true)]
      pub header: bool,  
 }
+
+#[derive(Debug, Parser)]
+pub struct GenPassOpts{
+    #[arg(short,long, default_value_t = 16, help = "密码长度")]
+    pub length: usize,
+    #[arg(short,long, default_value_t = false, help = "是否包含特殊字符")]
+    pub special: bool,
+    #[arg(short,long, default_value_t = false, help = "是否包含数字")]
+    pub number: bool,
+    #[arg(short,long, default_value_t = false, help = "是否包含大写字母")]
+    pub upper: bool,
+    #[arg (long, default_value_t = false, help = "是否包含小写字母")]
+    pub lower: bool,
+}
+
 impl From<OutputFormat> for &'static str{
     fn from(value: OutputFormat) -> Self {
         match value{
