@@ -6,7 +6,7 @@ use rcli::process_csv;
 
 fn main()-> anyhow::Result<()> {
     let opts = Opts::parse();
-    println!("{:?}" , opts);
+    //println!("{:?}" , opts);
     match opts.cmd{
         SubCommand::Csv(opts) => process_csv(&opts.input, &opts.output)?,
     }
