@@ -2,14 +2,6 @@ use std::path::Path;
 use clap::Parser;
 use std::str::FromStr;
 
-fn verify_input_file(fi: &str) -> Result<String,String>{
-    if Path::new(fi).exists(){
-        Ok(fi.to_string())
-    }else{
-        Err(format!("File {} not exists",fi))
-    }
-}
-
 
 #[derive(Debug,Clone,Copy)]
 pub enum OutputFormat{
@@ -18,20 +10,8 @@ pub enum OutputFormat{
     // Toml,
 }
 
-#[derive(Debug, Parser)]
-#[command(name = "rcli", version, author, about, long_about = None)]
-pub struct Opts{
-    #[command(subcommand)]
-    pub cmd: SubCommand,
-}
 
-#[derive(Debug, Parser)]
-pub enum SubCommand{
-    #[command(name = "csv",  about = "Show CSV , or Convert CSV to other formats")]
-    Csv(CsvOpts),
-    #[command(name = "genpass",  about = "generate a password")]
-    GenPass(GenPassOpts),
-}
+
 
 #[derive(Debug, Parser)]
 pub struct CsvOpts{
@@ -52,19 +32,6 @@ pub struct CsvOpts{
      pub header: bool,  
 }
 
-#[derive(Debug, Parser)]
-pub struct GenPassOpts{
-    #[arg(short,long, default_value_t = 16, help = "密码长度")]
-    pub length: usize,
-    #[arg(short,long, default_value_t = false, help = "是否包含特殊字符")]
-    pub special: bool,
-    #[arg(short,long, default_value_t = false, help = "是否包含数字")]
-    pub number: bool,
-    #[arg(short,long, default_value_t = false, help = "是否包含大写字母")]
-    pub upper: bool,
-    #[arg (long, default_value_t = false, help = "是否包含小写字母")]
-    pub lower: bool,
-}
 
 impl From<OutputFormat> for &'static str{
     fn from(value: OutputFormat) -> Self {
@@ -91,3 +58,10 @@ fn verify_output_format(fi: &str) -> Result<OutputFormat,anyhow::Error>{
 }
 
 
+fn verify_input_file(fi: &str) -> Result<String,String>{
+    if Path::new(fi).exists(){
+        Ok(fi.to_string())
+    }else{
+        Err(format!("File {} not exists",fi))
+    }
+}

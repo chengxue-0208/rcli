@@ -1,4 +1,4 @@
-use crate::opts::GenPassOpts;
+use crate::cli::genpass_opts::GenPassOpts;
 use rand::Rng;
 
 pub fn process_gen_pass(opts: &GenPassOpts) -> anyhow::Result<()>{
