@@ -1,8 +1,10 @@
 use crate::cli::genpass_opts::GenPassOpts;
+// use rand_core::{TryRngCore, OsRng,CryptoRng };
 use rand::Rng;
 
-pub fn process_gen_pass(opts: &GenPassOpts) -> anyhow::Result<()>{
-    let mut rng = rand::rng();
+pub fn process_gen_pass(opts: &GenPassOpts) -> anyhow::Result<String>{
+     let mut rng = rand::rng();
+    //let mut csrng = OsRng;
     let mut pass = String::new();
     let mut chars: String = String::new();
     if opts.special{
@@ -24,5 +26,5 @@ pub fn process_gen_pass(opts: &GenPassOpts) -> anyhow::Result<()>{
         pass.push(chars.chars().nth(rng.random_range(0..chars.len())).unwrap());
     }
     println!("{}", pass);
-    Ok(())
+    Ok(pass)
 }
