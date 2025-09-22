@@ -39,3 +39,19 @@ pub fn read_file(file_path: &str ) -> Result<String> {
     }
     Ok(output)
 }
+
+//UTF-8编码和UTF-16LE编码转换成字符串
+pub fn decode_to_string(data: &[u8]) -> Result<String> {
+    if data.len() >= 2 && data[0] == 0xFF && data[1] == 0xFE {
+        // 使用encoding_rs库解码UTF-16LE
+        let (cow, _, _) = UTF_16LE.decode(&data[2..]); // 跳过BOM标记
+        let str = cow.trim();
+        let text = str.to_string();
+        Ok(text)
+    }else{      
+        let str = String::from_utf8_lossy(data);
+        let str = str.trim();  
+        let text = str.to_string();
+        Ok(text)
+    }
+}
