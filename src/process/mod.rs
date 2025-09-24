@@ -3,3 +3,4 @@ pub mod gen_pass;
 pub mod base64;
 pub mod text;
 pub mod common;
+pub mod http_server;

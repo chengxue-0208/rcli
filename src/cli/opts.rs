@@ -3,6 +3,8 @@ use super::csv_opts::CsvOpts;
 use super::genpass_opts::GenPassOpts;
 use super::base64_opts::Base64Cmd;
 use super::text_opts::TextCmd;
+use super::http_opts::HttpCmd;
+use std::path::PathBuf;
 
 
 #[derive(Debug, Parser)]
@@ -22,6 +24,8 @@ pub enum SubCommand{
     Base64(Base64Cmd),
     #[command(subcommand, name = "text",  about = "text sign or verify")]
     Text(TextCmd),
+    #[command(subcommand, name = "http",  about = "http request")]
+    Http(HttpCmd),
 
 }
 
@@ -34,6 +38,14 @@ pub fn verify_file(fi: &str) -> Result<String,&'static str>{
     }
 }
 
+pub fn verify_path(fi: &str) -> Result<PathBuf,&'static str>{
+    let p = PathBuf::from(fi);
+    if p.exists() {
+        Ok(p)
+    }else{
+        Err("Path dose not exit")
+    }
+}
 
 
 

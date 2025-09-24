@@ -2,8 +2,9 @@ use crate::cli::http_opts::ServerOpts;
 use anyhow;
 use tracing::{info, warn};
 use axum::{
-    extract::{path, Path, State}, http::StatusCode, routing::get, Router
+    extract::{Path, State}, http::StatusCode, routing::get, Router
 };
+use tower_http::services::ServeDir;
 use std::path::PathBuf;
 
 use tokio::net::TcpListener;
@@ -17,9 +18,15 @@ pub async fn process_http_server(opts: &ServerOpts) -> anyhow::Result<()> {
     let state = httpServerState {
         path: opts.path.clone(),
     };
+    let dir_service = ServeDir::new(opts.path.clone())
+    .append_index_html_on_directories(true)
+    .precompressed_gzip()
+    .precompressed_br()
+    .precompressed_zstd()
+    .precompressed_deflate();
     let router = Router::new()
-        .route("/{*key}", get
-        (index_handler))
+        //.nest_service("/zcx", dir_service)
+        .route("/{*key}", get (index_handler))
         .with_state(Arc::new(state));
 
         info!("http server start at {}:{}", "127.0.0.1", opts.port);
